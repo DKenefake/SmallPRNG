@@ -24,7 +24,7 @@ In general the injected prng function should be of the form
 
 _inline
 INT_TYPE PRNG_NAME(prng_state<N>& state){
-  //some operations on the state and generate return type
+  //some operations on the state and generate return value
   return sample;
 }
 
