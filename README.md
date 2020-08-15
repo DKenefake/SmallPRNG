@@ -37,7 +37,7 @@ typedef prng<N, INT_TYPE, PRNG_NAME> my_prng;
 auto prng = my_prng()
 ```
 
-Now for a concreat example
+Now for a concrete example
 
 ```C++
 _inline
