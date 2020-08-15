@@ -1,11 +1,13 @@
 # SmallPRNG
-A small header only library for swapping prng implementations using templates. This is a fast library, as the swappable prngs implementations are defined at compile time there is not overhead at program runtime. The xorshift128+ implemntation included generates ~1 sample per ns on a 4.5Ghz 8600k. 
+A small header only library for swapping prng implementations using templates. This is a fast library, as the swappable prngs implementations are defined at compile time there is not overhead at program runtime. The xorshift128+ implementation included generates ~1 sample per ns on a 4.5Ghz 8600k.
 
 # Example of use
 
-In the case that the included prng implementations are not suitble for your application, you can inject your own prng into the library.
+In the case that the included prng implementations are not suitable for your application, you can inject your own prng into the library with no performance penalty.
 
-Here we are going to show an example of making a prng based on xorshift64. Included in the library is a templated struct that acts as the state for all prng implementations.
+We are going to show an example of making a prng based on xorshift64. 
+
+Included in the library is a templated struct that acts as the state for all prng implementations.
 
 ```C++
 auto s = prng_state<N>()
@@ -18,7 +20,7 @@ auto b = s.i32[0] //b is the first 32 bits of memory in the state
 auto c = s.i64[0] //c is the first 64 bits of memory in the state
 ```
 
-In general the injected prng function should be of the form
+In general, the injected prng function should be of the form
 
 ```C++
 
