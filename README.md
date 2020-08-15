@@ -1,5 +1,5 @@
 # SmallPRNG
-A small header only library for swapping prng implementations using templates
+A small header only library for swapping prng implementations using templates. This is a fast library, as the swappable prngs implementations are defined at compile time there is not overhead at program runtime.
 
 # Example of use
 
@@ -51,11 +51,14 @@ uint64_t xorshift64(prng_state<2>& s) {
 }
 ```
 
+The type definition of the custom prng
 ```C++
 typedef prng<2, uint64_t, xorshift64> my_prng;
 
 auto prng = my_prng();
-
+```
+With that done, all of the implemented functions can directly use the given generator
+```C++
 auto b = prng(); // returns a random uint64_t
 
 auto c = prng(0,5); // returns a random uint64_t in range of [0,5)
