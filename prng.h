@@ -197,7 +197,7 @@ uint64_t xorshift64(prng_state<2>& s) {
 	x ^= x << 13;
 	x ^= x >> 7;
 	x ^= x << 17;
-	s.i32[0] = x;
+	s.i64[0] = x;
 	return x;
 }
 
