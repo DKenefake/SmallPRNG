@@ -61,7 +61,7 @@ template<int N, typename T, T (*F)(prng_state<N>&)>
 class prng{
 public:
 	prng() { 
-		state = create_state<N>(); 
+		state = create_state<N>();
 	};
 	
 	~prng() {};
@@ -88,6 +88,28 @@ public:
 		}
 	}
 
+	float randf() {
+
+		uint32_t v;
+
+		if constexpr (sizeof(T) == 8)
+			v = uint32_t(operator()() >> 32);
+		if constexpr (sizeof(T) == 4)
+			v = operator()();
+		if constexpr (sizeof(T) == 2)
+			v = uint32_t(operator()()) << 16 | uint32_t(operator()());
+
+		//transforms v into a [0,1) float 
+		union {
+			float f;
+			uint32_t i;
+		}u;
+		u.f = 1.0f;
+		u.i = u.i | v >> 9;
+
+		return u.f - 1.0f;
+	}
+
 	double rand() {
 		uint64_t v;
 		//allows variable sized generators to use the same function
@@ -107,6 +129,7 @@ public:
 			
 		return u.d - 1.0;
 	}
+
 
 	T rand_poisson(double l) {
 		int n = 0;
@@ -139,33 +162,28 @@ public:
 	}
 
 	double rand_normal(double mean = 0, double std = 1) {
-		if (has_normal_spare) {
-			has_normal_spare = false;
-			return normal_spare * std + mean;
-		}
-		else {
-			double u, v, s;
-			do {
-				u = rand() * 2 - 1;
-				v = rand() * 2 - 1;
-				s = u * u + v * v;
-			} while (s >= 1 || s== 0);
-			s = std::sqrt(-2.0 * std::log(s) / s);
-			normal_spare = v * s;
-			has_normal_spare = true;
-			return normal_spare * std * s + mean;
-		}
+
+		double u, v, s;
+		do {
+			u = rand() * 2 - 1;
+			v = rand() * 2 - 1;
+			s = u * u + v * v;
+		} while (s >= 1 || s== 0);
+		s = std::sqrt(-2.0 * std::log(s) / s);
+		auto normal_spare = v * s;
+		return normal_spare * std * s + mean;
 	}
 
 	double rand(double low, double high) {
 		return rand() * (high - low) + low;
 	};
 
+	float randf(float low, float high) {
+		return randf() * (high - low) + low;
+	}
+
 private:
 	prng_state<N> state;
-
-	double normal_spare = 0;
-	bool   has_normal_spare = false;
 };
 
 _inline
@@ -247,4 +265,15 @@ uint64_t xoshiro256ss(prng_state<8>& s) {
 	s.i64[3] = rol64(s.i64[3], 45);
 	
 	return result;
+}
+
+_inline
+uint64_t fortran_lcg(prng_state<2>& s) {
+	uint64_t m = 2862933555777941757UL;
+	uint64_t a = 1013904243UL;
+
+	auto return_val = s.i64[0];
+	s.i64[0] = s.i64[0] * m + a;
+
+	return return_val;
 }
