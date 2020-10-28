@@ -67,6 +67,8 @@ auto c = prng(0,5); // returns a random uint64_t in range of [0,5)
 
 auto d = prng.rand(); // returns a random double in range of (0,1]
 
+auto h = prng.randf(); //returns a random float in range of (0,1]
+
 auto e = prng.rand(2, 5); // returns a random double in range of (2,5]
 
 auto f = prng.rand_poisson(4.3); // returns a sample from a poisson distribution of λ=4.3
