@@ -13,7 +13,7 @@
 #ifdef _MSC_VER
 	#define _INLINE __forceinline
 #elif __GNUC__
-	#define _INLINE __attribute__((always_inline))
+	#define _INLINE __attribute__((always_inline)) inline
 #else
 	#define _INLINE inline
 #endif
