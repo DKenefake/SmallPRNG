@@ -2,8 +2,22 @@
 
 #include<inttypes.h>
 #include<immintrin.h>
-#include<intrin.h>
 #include<random>
+
+#ifdef __GNUC__
+	#include<x86intrin.h>
+#else
+	#include<intrin.h>
+#endif
+
+#ifdef _MSC_VER
+	#define _INLINE __forceinline
+#elif __GNUC__
+	#define _INLINE __attribute__((always_inline))
+#else
+	#define _INLINE inline
+#endif
+
 
 constexpr auto prng_unbiased = false;
 constexpr auto use_rdseed = true;
@@ -186,7 +200,7 @@ private:
 	prng_state<N> state;
 };
 
-_inline
+_INLINE
 uint32_t middle_square(prng_state<6>& s) {
 	uint64_t x = s.i64[0];
 	uint64_t w = s.i64[1];
@@ -199,7 +213,7 @@ uint32_t middle_square(prng_state<6>& s) {
 	return (uint32_t)x;
 }
 
-_inline
+_INLINE
 uint32_t xorshift32(prng_state<1>& s) {
 	uint32_t x = s.i32[0];
 	x ^= x << 13;
@@ -209,7 +223,7 @@ uint32_t xorshift32(prng_state<1>& s) {
 	return x;
 }
 
-_inline
+_INLINE
 uint64_t xorshift64(prng_state<2>& s) {
 	uint64_t x = s.i64[0];
 	x ^= x << 13;
@@ -219,7 +233,7 @@ uint64_t xorshift64(prng_state<2>& s) {
 	return x;
 }
 
-_inline
+_INLINE
 uint32_t xorshift128(prng_state<4>& s) {
 	uint32_t t = s.i32[3];
 	uint32_t const s_ = s.i32[0];
@@ -234,7 +248,7 @@ uint32_t xorshift128(prng_state<4>& s) {
 }
 
 
-_inline
+_INLINE
 uint64_t xorshift128plus(prng_state<4>& s) {
 	uint64_t s1 = s.i64[0];
 	uint64_t s0 = s.i64[1];
@@ -247,11 +261,12 @@ uint64_t xorshift128plus(prng_state<4>& s) {
 	return s1 + s0;
 }
 
+_INLINE
 uint64_t rol64(uint64_t x, int k) {
 	return (x << k) | (x >> (64 - k));
 }
 
-_inline
+_INLINE
 uint64_t xoshiro256ss(prng_state<8>& s) {
 	uint64_t const result = rol64(s.i64[1] * 5, 7) * 9;
 	uint64_t const t = s.i64[1] << 17;
@@ -267,7 +282,7 @@ uint64_t xoshiro256ss(prng_state<8>& s) {
 	return result;
 }
 
-_inline
+_INLINE
 uint64_t fortran_lcg(prng_state<2>& s) {
 	uint64_t m = 2862933555777941757UL;
 	uint64_t a = 1013904243UL;
