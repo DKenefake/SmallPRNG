@@ -292,3 +292,18 @@ uint64_t fortran_lcg(prng_state<2>& s) {
 
 	return return_val;
 }
+
+_INLINE
+uint32_t squares(prng_state<4>& s){
+	// A 2020 modification od middle squares 
+	// https://arxiv.org/pdf/2004.06278v2.pdf
+	uint64_t x, y, z;
+	s.i64[0]++;
+	y = x = s.i64[0]*s.i64[1];
+	z = y + s.i64[1];
+	x = x*x + y;
+	x = (x>>32) | (x<<32);
+	x = x*x + z;
+	x = (x>>32) | (x <<32);
+	return (x*x + y) >> 32;
+}
