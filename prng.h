@@ -267,6 +267,11 @@ uint64_t rol64(uint64_t x, int k) {
 }
 
 _INLINE
+uint64_t rot(uint64_t x, int k) {
+	return (x << k) | (x >> (32 - k));
+}
+
+_INLINE
 uint64_t xoshiro256ss(prng_state<8>& s) {
 	uint64_t const result = rol64(s.i64[1] * 5, 7) * 9;
 	uint64_t const t = s.i64[1] << 17;
@@ -317,4 +322,16 @@ uint32_t lehmer_pm(prng_state<1>& s){
 	x = (x & 0x7fffffff) + (x >> 31);
 	s.i32[0] = x;
 	return x;
+}
+
+_INLINE
+uint64_t jsf(prng<8>& s){
+	//Bob's noncryptographic prng
+	// https://burtleburtle.net/bob/rand/smallprng.html
+	uint64_t e = s.i64[0] - rot(s.i64[1], 27);
+	s.i64[0] = s.i64[1] ^ rot(s.i64[2], 17);
+	s.i64[1] = s.i64[2] + s.i64[3];
+	s.i64[2] = s.i64[3] + e;
+	s.i64[3] = e + s.i64[0];
+	return s.i64[3];
 }
