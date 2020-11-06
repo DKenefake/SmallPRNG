@@ -307,3 +307,14 @@ uint32_t squares(prng_state<4>& s){
 	x = (x>>32) | (x <<32);
 	return (x*x + y) >> 32;
 }
+
+_INLINE
+uint32_t lehmer_pm(prng_state<1>& s){
+	// Lehmer prng from https://en.wikipedia.org/wiki/Lehmer_random_number_generator
+	// avoids 64 bit division
+	uint64_t product = (uint64_t)(s.i32[0])*48271;
+	uint32_t x = (product & 0x7fffffff) + (product >> 31);
+	x = (x & 0x7fffffff) + (x >> 31);
+	s.i32[0] = x;
+	return x;
+}
