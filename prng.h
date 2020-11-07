@@ -348,9 +348,9 @@ uint32_t salsa20(prng_state<33>& s) {
 	//Salsa20 Implementation modified from
 	//https://en.wikipedia.org/wiki/Salsa20
 
-	// prng_state 0-16  |-> in
-	// prng_state 17-32 |-> out
-	// prng_state 33 -> counter
+	// prng_state 0-15  |-> in
+	// prng_state 16-31 |-> out
+	// prng_state 32 -> counter
 
 	// check if we have exaused the stream
 
