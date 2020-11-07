@@ -1,5 +1,5 @@
 # SmallPRNG
-A small header only library for swapping prng implementations using templates. This is a fast library, as the swappable prngs implementations are defined at compile time there is not overhead at program runtime. The xorshift128+ implementation included generates ~1 sample per ns on a 4.5Ghz 8600k.
+A small header only library for prng implementations using templates. This is a fast library, as the swappable prngs implementations are defined at compile time there is not overhead at program runtime. The xorshift128+ implementation included generates ~1 sample per ns on a 4.5Ghz 8600k. In addition there are k equidimensional generators that can be build from any of the prng impementations. 
 
 # Example of use
 
@@ -32,12 +32,22 @@ INT_TYPE PRNG_NAME(prng_state<N>& state){
 
 ```
 
-And to generate the sampler based on that prng is done as follows
+To generate the sampler based on that prng is done as follows
 ```
 typedef prng<N, INT_TYPE, PRNG_NAME> my_prng;
 
 auto prng = my_prng()
 ```
+
+To generate a M equidistributed prng is done as follows
+```
+typedef prng<N, INT_TYPE, PRNG_NAME> my_prng;
+
+auto prng = prng_kd<prng, M>();
+
+```
+
+
 
 Now for a concrete example
 
@@ -58,6 +68,7 @@ The type definition of the custom prng
 typedef prng<2, uint64_t, xorshift64> my_prng;
 
 auto prng = my_prng();
+auto prng_10dim = prng_kd<my_prng, 10>();
 ```
 With that done, all of the implemented functions can directly use the given generator
 ```C++
@@ -83,3 +94,23 @@ auto i = prng.rand_normal(); // returns a normalily distributed sample with with
 auto g = prng.rand_normal(1.0, 4.5);  // returns a normalily distributed sample with with mean = 1.0 and std = 4.5
 
 ```
+
+# Included (P)RNG Algorithms
+
+* Middle Square
+
+* Xorshift32/64/128/128+
+
+* Xoshiro256**
+
+* Knuth's LCG
+
+* Squares
+
+* JSF
+
+* Salsa20
+
+* rdrand/rdseed
+
+* AES PRNG
