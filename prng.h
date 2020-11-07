@@ -129,7 +129,7 @@ public:
 	}
 
 	_INLINE
-		uint32_t rand_32() {
+	uint32_t rand_32() {
 		uint32_t v;
 
 		if constexpr (sizeof(T) == 8)
@@ -143,7 +143,7 @@ public:
 	}
 
 	_INLINE
-		uint64_t rand_64() {
+	uint64_t rand_64() {
 		uint64_t v;
 
 		if constexpr (sizeof(T) == 8)
@@ -208,6 +208,58 @@ public:
 
 private:
 	prng_state<N> state;
+};
+
+template<typename prng, int k>
+class prng_kd{
+public:
+
+	prng_kd() {
+		for (int i = 0; i < k; i++)
+			prngs[i] = prng();
+		counter = 0LL;
+	};
+	
+	~prng_kd() {};
+
+	_INLINE
+	float randf() {
+		float result = prngs[counter].randf();
+		update_counter();
+		return result;
+	}
+
+	_INLINE
+	double rand() {
+		double result = prngs[counter].rand();
+		update_counter();
+		return result;
+	}
+
+	_INLINE
+	uint32_t rand_32() {
+		uint32_t result = prngs[counter].rand_32();
+		update_counter();
+		return result;
+	}
+
+	_INLINE
+	uint64_t rand_64() {
+		uint64_t result = prngs[counter].rand_64();
+		update_counter();
+		return result;
+	}
+
+
+	_INLINE
+	void update_counter() {
+		counter++;
+		counter %= k;
+	}
+
+private:
+	prng prngs[k];
+	uint64_t counter;
 };
 
 _INLINE
@@ -310,25 +362,14 @@ uint32_t squares(prng_state<4>& s) {
 	// A 2020 modification od middle squares 
 	// https://arxiv.org/pdf/2004.06278v2.pdf
 	uint64_t x, y, z;
-	s.i64[0]++;
 	y = x = s.i64[0] * s.i64[1];
 	z = y + s.i64[1];
 	x = x * x + y;
 	x = (x >> 32) | (x << 32);
 	x = x * x + z;
 	x = (x >> 32) | (x << 32);
+	s.i64[0]++;
 	return (x * x + y) >> 32;
-}
-
-_INLINE
-uint32_t lehmer_pm(prng_state<1>& s) {
-	// Lehmer prng from https://en.wikipedia.org/wiki/Lehmer_random_number_generator
-	// avoids 64 bit division
-	uint64_t product = (uint64_t)(s.i32[0]) * 48271;
-	uint32_t x = (product & 0x7fffffff) + (product >> 31);
-	x = (x & 0x7fffffff) + (x >> 31);
-	s.i32[0] = x;
-	return x;
 }
 
 _INLINE
@@ -348,9 +389,9 @@ uint32_t salsa20(prng_state<33>& s) {
 	//Salsa20 Implementation modified from
 	//https://en.wikipedia.org/wiki/Salsa20
 
-	// prng_state 0-15  |-> in
-	// prng_state 16-31 |-> out
-	// prng_state 32 -> counter
+	// prng_state 0-16  |-> in
+	// prng_state 17-32 |-> out
+	// prng_state 33 -> counter
 
 	// check if we have exaused the stream
 
@@ -396,3 +437,36 @@ uint32_t salsa20(prng_state<33>& s) {
 	return s.i32[16];
 }
 
+
+_INLINE
+uint32_t rdrand(prng_state<1>& s) {
+	while (!_rdrand32_step(&s.i32[0]));
+	return s.i32[0];
+}
+
+_INLINE
+uint32_t rdseed(prng_state<1>& s) {
+	while (!_rdseed32_step(&s.i32[0]));
+	return s.i32[0];
+}
+
+template<int N>
+uint64_t rand_aes(prng_state<4>& s) {
+	// source translated from
+	//https://github.com/Computeiful/BiRandom/blob/master/BiRandom.h
+
+	union {
+		__m128i i;
+		uint64_t U, L;
+	}seed;
+
+	auto nonce = _mm_set1_epi32(s.i32[3]);
+
+	seed.i = _mm_set1_epi64x((int64_t)s.i64[0]);
+	
+	for (int i = 0; i < N; i++)
+		seed.i = _mm_aesenc_si128(seed.i, nonce);
+
+	s.i64[0] = seed.L;
+	return s.i64[0];
+}
