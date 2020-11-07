@@ -61,20 +61,25 @@ auto prng = my_prng();
 ```
 With that done, all of the implemented functions can directly use the given generator
 ```C++
-auto b = prng(); // returns a random uint64_t
 
-auto c = prng(0,5); // returns a random uint64_t in range of [0,5)
+auto a = prng.rand(); // returns a random double in range of (0,1]
 
-auto d = prng.rand(); // returns a random double in range of (0,1]
+auto b = prng.randf(); //returns a random float in range of (0,1]
 
-auto h = prng.randf(); //returns a random float in range of (0,1]
+auto c = prng.rand_64(); // returns a random uint64_t
 
-auto e = prng.rand(2, 5); // returns a random double in range of (2,5]
+auto d = prng.rand_32(); // returns a random uint32_t
 
-auto f = prng.rand_poisson(4.3); // returns a sample from a poisson distribution of λ=4.3
+auto e = prng.rand_64(0,5); // returns a random uint64_t in range of [0,5)
 
-auto g = prng.rand_normal(); // returns a normalily distributed sample with with mean = 0 and std = 1
+auto f = prng.rand(2, 5); // returns a random double in range of (2,5]
 
-auto h = prng.rand_normal(1.0, 4.5);  // returns a normalily distributed sample with with mean = 1.0 and std = 4.5
+auto g = prng.randf(2,5); // returns a random float in range of (2, 5]
+
+auto h = prng.rand_poisson(4.3); // returns a sample from a poisson distribution of λ=4.3
+
+auto i = prng.rand_normal(); // returns a normalily distributed sample with with mean = 0 and std = 1
+
+auto g = prng.rand_normal(1.0, 4.5);  // returns a normalily distributed sample with with mean = 1.0 and std = 4.5
 
 ```
