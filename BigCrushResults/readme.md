@@ -4,7 +4,7 @@ Crush is a suite that tests the statistical quality of pseudo random generator a
 
 The number in front of F indicates the number of tests that have failed, and the number in front of S refers to the number of improbable results but not near impossible results. If nothing is marked, then it passes all tests without suspicious results.
 
-These are all run on using different seeds. 
+These are all run on using different seeds.
 
 
 ## Nonreversed PRNG Results
