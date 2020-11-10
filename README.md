@@ -184,7 +184,7 @@ auto rng = my_prng();
 To create a K equidimensional prng from a prng algorithm all that is needed is the following. In this example K = 10.
 
 ```C++
-using my_kd_prng = prng_kd<my_prng, 10>
+using my_kd_prng = prng_kd<my_prng, 10>;
 
 auto rng = my_kd_prng();
 ```
