@@ -1,4 +1,4 @@
-#Benchmark
+# Benchmark
 
 I have a simple bemchmark here to get relative speeds of each prng algorithm. Eventually I want to run this on different hardware to show relative and absolute performance numebrs on x86 desktop cpus, ARM, ect. The benchmark is summing 1 billion uniformly generated double floating point precission numbers.
 
