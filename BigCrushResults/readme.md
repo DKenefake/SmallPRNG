@@ -1,8 +1,10 @@
 # TestU01 - Crush 
 
-Crush a testing suite that tests the statistical quality of pseudo random generator algorithms. There are 3 differnt levels of test, 'small crush', 'medium crush' and 'big crush'. I am testing the 32 bit outputs of these generators on a random seed, as well as the bit reversed outputs. I will summarize these in a table as well as include the program outputs in this directory so that you can see what tests were failed.
+Crush is a suite that tests the statistical quality of pseudo random generator algorithms. There are 3 differnt levels of test, 'small crush', 'medium crush' and 'big crush'. I am testing the 32 bit outputs of these generators on a random seed, as well as the bit reversed outputs. I will summarize these in a table as well as include the program outputs in this directory so that you can see what tests were failed.
 
 The number in front of F indicates the number of tests that have failed, and the number in front of S refers to the number of improbable results but not near impossible results. If nothing is marked, then it passes all tests without suspicious results.
+
+These are all run on using different seeds. 
 
 
 ## Nonreversed PRNG Results
