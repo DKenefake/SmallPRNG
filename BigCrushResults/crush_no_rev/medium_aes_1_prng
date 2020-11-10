@@ -1,0 +1,25 @@
+
+========= Summary results of Crush =========
+
+ Version:          TestU01 1.2.3
+ Generator:        Bunga Bunda
+ Number of statistics:  144
+ Total CPU time:   00:30:39.65
+ The following tests gave p-values outside [0.001, 0.9990]:
+ (eps  means a value < 1.0e-300):
+ (eps1 means a value < 1.0e-15):
+
+       Test                          p-value
+ ----------------------------------------------
+  3  CollisionOver, t = 2           1.6e-72
+ 11  BirthdaySpacings, t = 2          eps  
+ 18  ClosePairs NP, t = 2           3.9e-29
+ 18  ClosePairs mNP, t = 2           9.4e-6
+ 18  ClosePairs mNP1, t = 2          4.4e-6
+ 18  ClosePairs mNP2, t = 2          2.1e-7
+ 21  ClosePairsBitMatch, t = 2       2.8e-5
+ ----------------------------------------------
+ All other tests were passed
+
+
+
