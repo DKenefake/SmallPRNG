@@ -19,9 +19,21 @@
 #endif
 
 
-constexpr auto prng_unbiased = false;
+
+namespace SmallPRNG{
+
+#ifdef SMALLPRNG_USE_RDSEED
+constexpr auto use_rdseed = true;
+constexpr auto use_rddevice = false;
+#endif
+
+#ifndef SMALLPRNG_USE_RDSEED
 constexpr auto use_rdseed = false;
 constexpr auto use_rddevice = true;
+#endif
+
+
+constexpr auto prng_unbiased = false;
 
 static_assert(use_rdseed^ use_rddevice, "Use either rdseed or random device of entropy not both");
 
@@ -262,6 +274,7 @@ private:
 	uint64_t counter;
 };
 
+
 _INLINE
 uint32_t middle_square(prng_state<6>& s) {
 	uint64_t x = s.i64[0];
@@ -440,4 +453,32 @@ uint64_t rand_aes(prng_state<4>& s) {
 
 	s.i64[0] = seed.L;
 	return s.i64[0];
+}
+
+
+//predefined prng's that are included with the solver
+using mid_sqare = prng<6, uint32_t, middle_square>;
+using xor32 = prng<1, uint32_t, xorshift32>;
+using xor64 = prng<2, uint64_t, xorshift64>;
+using xor128 = prng<4, uint32_t, xorshift128>;
+using xor128_plus = prng<4, uint64_t, xorshift128plus>;
+using xs_superstar = prng<8, uint64_t, xoshiro256ss>;
+using knuth_lcg = prng<2, uint64_t, fortran_lcg>;
+using improved_squares = prng<4, uint32_t, squares>;
+using sfc = prng<4, uint32_t, sfc32>;
+using splitmix = prng<4, uint32_t, splitmix32>;
+using bob_prng = prng<8, uint64_t, jsf>;
+using rd_rand = prng<1, uint32_t, rdrand>;
+using rd_seed = prng<1, uint32_t, rdseed>;
+using aes_1 = prng<4, uint64_t, rand_aes<1>>;
+using aes_2 = prng<4, uint64_t, rand_aes<2>>;
+using aes_4 = prng<4, uint64_t, rand_aes<4>>;
+using aes_8 = prng<4, uint64_t, rand_aes<8>>;
+
+template<int N>
+using  aes_N = prng<4, uint64_t, rand_aes<N>>;
+
+
+using rng_default = improved_squares;
+
 }
