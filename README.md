@@ -3,7 +3,7 @@ A small header only library for pseudo random number generators (prngs). This is
 
 # Projects using SmallPRNG
 
-* [MinSSE](https://github.com/Chronum94/MinSSEMinSSE) - MinSSE: A minimal 2/3D Heisenberg lattice simulator using the stochastic series expansion. 
+* [MinSSE](https://github.com/Chronum94/MinSSEMinSSE) - A minimal 2/3D Heisenberg lattice simulator using the stochastic series expansion. 
 
 
 # Example of use 
