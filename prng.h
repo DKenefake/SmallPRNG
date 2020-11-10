@@ -481,40 +481,40 @@ using  aes_N = prng<4, uint64_t, rand_aes<N>>;
 //allows comand line arguemnts to change prng type
 
 #if SMALLPRNG_XOR32
-using rng_default = xor32;
+using prng_default = xor32;
 #elif SMALLPRNG_XOR64
-using rng_default = xor64;
+using prng_default = xor64;
 #elif SMALLPRNG_XOR128
-using rng_default = xor128;
+using prng_default = xor128;
 #elif SMALLPRNG_XOR128_PLUS
-using rng_default = xor128_plus;
+using prng_default = xor128_plus;
 #elif SMALLPRNG_XS_SUPERSTAR
-using rng_default = xs_superstar;
+using prng_default = xs_superstar;
 #elif SMALLPRNG_KNUTH_LCG
-using rng_default = knuth_lcg;
+using prng_default = knuth_lcg;
 #elif SMALLPRNG_IMPROVED_SQUARES
-using rng_default = improved_squares;
+using prng_default = improved_squares;
 #elif SMALLPRNG_SFC
-using rng_default = sfc;
+using prng_default = sfc;
 #elif SMALLPRNG_SPLITMIX
-using rng_default = splitmix;
+using prng_default = splitmix;
 #elif SMALLPRNG_JSF
-using rng_default = bob_prng;
+using prng_default = bob_prng;
 #elif SMALLPRNG_RDRAND
-using rng_default = rd_rand;
+using prng_default = rd_rand;
 #elif SMALLPRNG_RDSEED
-using rng_default = rd_seed;
+using prng_default = rd_seed;
 #elif SMALLPRNG_AES1
-using rng_default = aes_1;
+using prng_default = aes_1;
 #elif SMALLPRNG_AES2
-using rng_default = aes_2;
+using prng_default = aes_2;
 #elif SMALLPRNG_AES4
-using rng_default = aes_4;
+using prng_default = aes_4;
 #elif SMALLPRNG_AES8
-using rng_default = aes_8;
+using prng_default = aes_8;
 #else
 //use defualt
-using rng_default = improved_squares;
+using prng_default = improved_squares;
 #endif
 
 
