@@ -20,8 +20,8 @@
 
 
 constexpr auto prng_unbiased = false;
-constexpr auto use_rdseed = true;
-constexpr auto use_rddevice = false;
+constexpr auto use_rdseed = false;
+constexpr auto use_rddevice = true;
 
 static_assert(use_rdseed^ use_rddevice, "Use either rdseed or random device of entropy not both");
 
@@ -206,7 +206,7 @@ public:
 		return randf() * (high - low) + low;
 	}
 
-private:
+public:
 	prng_state<N> state;
 };
 
@@ -330,6 +330,7 @@ T rot(T x, int k) {
 	return (x << k) | (x >> (bit_count - k));
 }
 
+
 _INLINE
 uint64_t xoshiro256ss(prng_state<8>& s) {
 	uint64_t const result = rot(s.i64[1] * 5, 7) * 9;
@@ -376,67 +377,37 @@ _INLINE
 uint64_t jsf(prng_state<8>& s) {
 	//Bob's noncryptographic prng
 	// https://burtleburtle.net/bob/rand/smallprng.html
-	uint64_t e = s.i64[0] - rot(s.i64[1], 27);
-	s.i64[0] = s.i64[1] ^ rot(s.i64[2], 17);
-	s.i64[1] = s.i64[2] + s.i64[3];
+	uint64_t e = s.i64[0] - rot(s.i64[1], 7);
+	s.i64[0] = s.i64[1] ^ rot(s.i64[2], 13);
+	s.i64[1] = s.i64[2] + rot(s.i64[3], 37);
 	s.i64[2] = s.i64[3] + e;
 	s.i64[3] = e + s.i64[0];
 	return s.i64[3];
 }
 
 _INLINE
-uint32_t salsa20(prng_state<33>& s) {
-	//Salsa20 Implementation modified from
-	//https://en.wikipedia.org/wiki/Salsa20
-
-	// prng_state 0-16  |-> in
-	// prng_state 17-32 |-> out
-	// prng_state 33 -> counter
-
-	// check if we have exaused the stream
-
-#define QR(a,b,c,d)(\
-		b ^= rot(a + d,7), \
-		c ^= rot(b + a, 9), \
-		d ^= rot(c + b, 13), \
-		a ^= rot(d+c, 18))
-
-	uint32_t counter = s.i32[32];
-
-	if (counter < 16) {
-		uint32_t return_val = s.i32[16 + counter];
-		s.i32[32] += 1;
-		return return_val;
-	}
-
-	uint32_t x[16];
-	uint32_t i;
-
-	for (i = 0; i < 16; i++) {
-		x[i] = s.i32[i];
-	}
-
-	for (i = 0; i < 20; i += 2) {
-		//Odd round
-		QR(s.i32[0], s.i32[4], s.i32[8], s.i32[12]);
-		QR(s.i32[5], s.i32[9], s.i32[13], s.i32[1]);
-		QR(s.i32[10], s.i32[14], s.i32[2], s.i32[6]);
-		QR(s.i32[15], s.i32[3], s.i32[7], s.i32[11]);
-
-		//Even round
-		QR(s.i32[0], s.i32[1], s.i32[2], s.i32[3]);
-		QR(s.i32[5], s.i32[6], s.i32[7], s.i32[4]);
-		QR(s.i32[10], s.i32[11], s.i32[8], s.i32[9]);
-		QR(s.i32[15], s.i32[12], s.i32[13], s.i32[14]);
-	}
-
-	for (i = 0; i < 16; i++)
-		s.i32[16 + i] = x[i] + s.i32[i];
-
-	s.i32[32] = 0;
-	return s.i32[16];
+uint32_t sfc32(prng_state<4>& s){
+	//http://wwwlgis.informatik.uni-kl.de/cms/fileadmin/publications/2020/thesis.pdf
+	uint32_t t = s.i32[0] + s.i32[1] + s.i32[3]++;
+	s.i32[0] = s.i32[1] ^ (s.i32[1] >> 9);
+	s.i32[1] = s.i32[2] ^ (s.i32[2] << 3);
+	s.i32[2] = ((s.i32[2] << 21) | (s.i32[2] >> (32 - 21))) + t;
+	return t;
 }
 
+_INLINE
+uint32_t splitmix32(prng_state<4>& s){
+	//http://wwwlgis.informatik.uni-kl.de/cms/fileadmin/publications/2020/thesis.pdf
+	s.i64[1] |= 1;
+
+	uint64_t seed = s.i64[0];
+	s.i64[0] += s.i64[1];
+	seed ^= seed >> 33;
+	seed *= 0x62a9d9ed799705f5;
+	seed ^= seed >> 28;
+	seed *= 0xcb24d0a5c88c35b3;
+	return uint32_t(seed >> 32);
+}
 
 _INLINE
 uint32_t rdrand(prng_state<1>& s) {
@@ -454,7 +425,7 @@ template<int N>
 uint64_t rand_aes(prng_state<4>& s) {
 	// source translated from
 	//https://github.com/Computeiful/BiRandom/blob/master/BiRandom.h
-
+	static_assert(N > 0, "Needs a Positive number of AES rounds");
 	union {
 		__m128i i;
 		uint64_t U, L;
