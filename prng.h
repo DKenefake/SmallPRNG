@@ -20,7 +20,7 @@
 
 
 
-namespace SmallPRNG{
+namespace smallprng{
 
 #ifdef SMALLPRNG_USE_RDSEED
 constexpr auto use_rdseed = true;
