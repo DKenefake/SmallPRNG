@@ -6,7 +6,7 @@ A small header only library for pseudo random number generators (prngs). This is
 Here we will use an AES based prng to generate random numbers. 
 
 ```cpp
-#include "prng"
+#include "prng.h"
 
 // makes a prng based on 4 rounds of AES
 auto rng = smallprng::aes_4();
