@@ -1,7 +1,7 @@
 # SmallPRNG
 A small header only library for pseudo random number generators (prngs). This is an extendable library with minimal overhead. It comes with a list of common prng algorithms as well as an easy and intuitive interface to implement your own. The motivation for this library to to test how different prng algorithms effect monte carlo code results but it is an effective general purpose library.
 
-### Projects using SmallPRNG
+## Projects using SmallPRNG
 
 * [MinSSE](https://github.com/Chronum94/MinSSEMinSSE) - A minimal 2/3D Heisenberg lattice simulator using the stochastic series expansion. 
 
