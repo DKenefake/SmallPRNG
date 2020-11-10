@@ -1,7 +1,108 @@
 # SmallPRNG
-A small header only library for prng implementations using templates. This is a fast library, as the swappable prngs implementations are defined at compile time there is not overhead at program runtime. The xorshift128+ implementation included generates ~1 sample per ns on a 4.5Ghz 8600k. In addition there are k equidimensional generators that can be build from any of the prng impementations. 
+A small header only library for pseudo random number generators (prngs). This is a extendable library with very little over head. It comes with a list of common prng algorithms as well as an easy and intuative interface to implement your own. The motivation for this library to to test how different prng algorithms effect monte carlo code results but it is an effective general purpose library.
 
-# Example of use
+
+
+# Example of use 
+
+```cpp
+#include "prng"
+
+// makes a prng based on 4 rounds of AES
+auto rng = smallprng::aes_4();
+
+double a = rng.rand();   // returns a random double in range (0,1]
+
+float b = prng.randf();  // returns a random float in range (0,1] 
+
+unsigned long long c = prng.rand_64(); // returns a random uint64_t
+
+unsigned int d = prng.rand_32(); // returns a random uint32_t
+
+double e = prng.rand(2, 5); // returns a random double in range of (2,5]
+
+float f = prng.randf(2,5); // returns a random float in range of (2, 5]
+
+double g = prng.rand_poisson(4.3); // returns a sample from a poisson distribution of λ=4.3
+
+double h = prng.rand_normal(); // returns a normalily distributed sample with with mean = 0 and std = 1
+
+double i = prng.rand_normal(1.0, 4.5);  // returns a normalily distributed sample with with mean = 1.0 and std = 4.5
+```
+# List of Included PRNGs and how to access them
+
+
+* Xorshift32
+```C++
+auto rng = smallprng::xor32();
+```
+* Xorshift64
+```C++
+auto rng = smallprng::xor64();
+```
+* Xorshift128
+```C++
+auto rng = smallprng::xor128();
+```
+* Xorshift128+
+```C++
+auto rng = smallprng::xor128_plus();
+```
+* Xoroshiro**
+```C++
+auto rng = smallprng::xs_superstar();
+```
+* LCG based on Knuth's Parameters
+```C++
+auto rng = smallprng::knuth_lcg();
+```
+* Squared Algorithm from 
+```C++
+auto rng = smallprng::improved_squares();
+```
+* SFC32
+```C++
+auto rng = smallprng::sfc();
+```
+* SplitMix32
+```C++
+auto rng = smallprng::splitmix();
+```
+* JSF
+```C++
+auto rng = smallprng::bob_prng();
+```
+* x86 RD Rand
+```C++
+auto rng = smallprng::rd_rand();
+```
+* x86 RD Seed
+```C++
+auto rng = smallprng::rd_seed();
+```
+* x86 AES 1 Round Chipher
+```C++
+auto rng = smallprng::aes_1();
+```
+* x86 AES 2 Round Chipher
+```C++
+auto rng = smallprng::aes_2();
+```
+* x86 AES 4 Round Chipher
+```C++
+auto rng = smallprng::aes_4();
+```
+* x86 AES 8 Round Chipher
+```C++
+auto rng = smallprng::aes_8();
+```
+* x86 AES N Round Chipher
+```C++
+auto rng = smallprng::aes_N<N>();
+```
+
+
+# Example of Implementing a PRNG
 
 In the case that the included prng implementations are not suitable for your application, you can inject your own prng into the library with no performance penalty.
 
@@ -34,20 +135,10 @@ INT_TYPE PRNG_NAME(prng_state<N>& state){
 
 To generate the sampler based on that prng is done as follows
 ```
-typedef prng<N, INT_TYPE, PRNG_NAME> my_prng;
+using my_prng = prng<N, INT_TYPE, PRNG_NAME>;
 
 auto prng = my_prng()
 ```
-
-To generate a M equidistributed prng is done as follows
-```
-typedef prng<N, INT_TYPE, PRNG_NAME> my_prng;
-
-auto prng = prng_kd<prng, M>();
-
-```
-
-
 
 Now for a concrete example
 
@@ -65,52 +156,15 @@ uint64_t xorshift64(prng_state<2>& s) {
 
 The type definition of the custom prng
 ```C++
-typedef prng<2, uint64_t, xorshift64> my_prng;
+using my_prng = prng<2, uint64_t, xorshift64>;
 
-auto prng = my_prng();
-auto prng_10dim = prng_kd<my_prng, 10>();
+auto rng = my_prng();
 ```
-With that done, all of the implemented functions can directly use the given generator
+
+To create a K equidimensional prng from a prng algorithm all that is needed is the following. In this example K = 10.
+
 ```C++
+using my_kd_prng = prng_kd<my_prng, 10>
 
-auto a = prng.rand(); // returns a random double in range of (0,1]
-
-auto b = prng.randf(); //returns a random float in range of (0,1]
-
-auto c = prng.rand_64(); // returns a random uint64_t
-
-auto d = prng.rand_32(); // returns a random uint32_t
-
-auto e = prng.rand_64(0,5); // returns a random uint64_t in range of [0,5)
-
-auto f = prng.rand(2, 5); // returns a random double in range of (2,5]
-
-auto g = prng.randf(2,5); // returns a random float in range of (2, 5]
-
-auto h = prng.rand_poisson(4.3); // returns a sample from a poisson distribution of λ=4.3
-
-auto i = prng.rand_normal(); // returns a normalily distributed sample with with mean = 0 and std = 1
-
-auto g = prng.rand_normal(1.0, 4.5);  // returns a normalily distributed sample with with mean = 1.0 and std = 4.5
-
+auto rng = my_kd_prng();
 ```
-
-# Included (P)RNG Algorithms
-
-* Middle Square
-
-* Xorshift32/64/128/128+
-
-* Xoshiro256**
-
-* Knuth's LCG
-
-* Squares
-
-* JSF
-
-* Salsa20
-
-* rdrand/rdseed
-
-* AES PRNG
