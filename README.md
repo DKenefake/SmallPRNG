@@ -5,6 +5,8 @@ A small header only library for pseudo random number generators (prngs). This is
 
 # Example of use 
 
+Here we will use an AES based prng to generate random numbers. 
+
 ```cpp
 #include "prng"
 
@@ -29,6 +31,21 @@ double h = prng.rand_normal(); // returns a normalily distributed sample with wi
 
 double i = prng.rand_normal(1.0, 4.5);  // returns a normalily distributed sample with with mean = 1.0 and std = 4.5
 ```
+
+A default generator is also supplied if selecting a specific algorithm is not important to your workload. This is a fast generator that give high quality random numbers.
+
+```
+auto rng = smallprng::prng_default();
+```
+
+If K dimensional equidistribution is needed, the class ``prng_kd`` is included. This is not generally needed for most uses, except for monte carlo codes ect.
+
+Here is an example of a 10 dimensional eqidistributed prng based on the above algorithm.
+```
+using smallprng;
+auto rng = prng_kd<aes_4, 10>();
+```
+
 # List of Included PRNGs and how to access them
 
 
