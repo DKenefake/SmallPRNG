@@ -6,15 +6,18 @@ I am including the benchmark.cpp file here so that you can run it yourself if yo
 
 ## Results
 
-|    Algorithm    |  Time (mSec) |
+|    Algorithm    |     8600k    |
 |:---------------:|:------------:|
 |  Middle Square  |     2286     |
 |    Xorshift32   |     2947     |
 |    Xorshift64   |     1582     |
-|   Xorshift128   |     2460     |
-|   Xorshift128+  |     1445     |
+|   Xorshift128   |     2860     |
+|   Xorshift128+  |     1345     |
 |   XoShiro256**  |     5566     |
 |   Knuth's LCG   |      948     |
-| Improved Square |     2295     |
-|    Bob's PRNG   |      984     |
-|     Salsa20     |     14853    |
+| Improved Square |     2404     |
+|    Bob's PRNG   |     1128     |
+|   AES 1 Round   |     2071     |  
+|   AES 2 Round   |     4102     |  
+|   AES 4 Round   |     5880     |  
+|   AES 8 Round   |     9462     |  
