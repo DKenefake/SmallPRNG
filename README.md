@@ -30,7 +30,7 @@ double h = prng.rand_normal(); // returns a normalily distributed sample with wi
 double i = prng.rand_normal(1.0, 4.5);  // returns a normalily distributed sample with with mean = 1.0 and std = 4.5
 ```
 
-A default generator is also supplied if selecting a specific algorithm is not important to your workload. This is a fast generator that give high quality random numbers.
+A default generator is also supplied if selecting a specific algorithm is not important to your workload. This is a fast generator that gives high quality random numbers.
 
 ```
 auto rng = smallprng::prng_default();
