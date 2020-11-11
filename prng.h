@@ -76,12 +76,25 @@ prng_state<N> create_state() {
 }
 
 template<int N>
-prng_state<N> set_state(uint32_t* dat) {
+prng_state<N> set_state(uint64_t* dat) {
 	auto state = prng_state<N>();
-	std::copy(dat, dat + N, state.i32);
+	std::copy(dat, dat + N>>1, state.i64);
 	return state;
 }
 
+template<int N>
+prng_state<N> set_state(uint32_t* dat) {
+	auto state = prng_state<N>();
+	std::copy(dat, dat + N , state.i32);
+	return state;
+}
+
+template<int N>
+prng_state<N> set_state(uint16_t* dat) {
+	auto state = prng_state<N>();
+	std::copy(dat, dat + N<<1, state.i16);
+	return state;
+}
 
 template<int N, typename T, T(*F)(prng_state<N>&)>
 class prng {
@@ -89,7 +102,16 @@ public:
 	prng() {
 		state = create_state<N>();
 	};
+	
+	prng(prng_state<N> passed_state) {
+			state = passed_state;
+	}
 
+	template<typename P>
+	prng(P* passed_state) {
+		state = set_state<N>(passed_state);
+	}
+	
 	~prng() {};
 
 	T operator()() {
