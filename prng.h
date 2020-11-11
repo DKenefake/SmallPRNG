@@ -78,7 +78,7 @@ prng_state<N> create_state() {
 template<int N>
 prng_state<N> set_state(uint64_t* dat) {
 	auto state = prng_state<N>();
-	std::copy(dat, dat + N>>1, state.i64);
+	std::copy(dat, dat + (N/2), state.i64);
 	return state;
 }
 
@@ -92,7 +92,7 @@ prng_state<N> set_state(uint32_t* dat) {
 template<int N>
 prng_state<N> set_state(uint16_t* dat) {
 	auto state = prng_state<N>();
-	std::copy(dat, dat + N<<1, state.i16);
+	std::copy(dat, dat + (2*N), state.i16);
 	return state;
 }
 
