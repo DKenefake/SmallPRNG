@@ -4,7 +4,7 @@
 
 //main benchmarking function
 template<typename prng>
-int benchmark() {
+unsigned int benchmark() {
 	
 	auto start = std::chrono::high_resolution_clock::now();
 	
@@ -40,12 +40,9 @@ int main() {
 	std::cout << "Knuth's LCG      " << benchmark<knuth_lcg>() << std::endl;
 	std::cout << "Improved Square  " << benchmark<improved_squares>() << std::endl;
 	std::cout << "JSF              " << benchmark<bob_prng>() << std::endl;
-	std::cout << "AES 1 Round      " << benchmark<aes_1>() << std::endl;
-	std::cout << "AES 2 Round      " << benchmark<aes_2>() << std::endl;
-	std::cout << "AES 4 Round      " << benchmark<aes_4>() << std::endl;
-	std::cout << "AES 8 Round      " << benchmark<aes_8>() << std::endl;
-
-	std::getchar();
-
+	std::cout << "AES  1 Round     " << benchmark<aes_1>() << std::endl;
+	std::cout << "AES  2 Round     " << benchmark<aes_2>() << std::endl;
+	std::cout << "AES  4 Round     " << benchmark<aes_4>() << std::endl;
+	std::cout << "AES  8 Round     " << benchmark<aes_8>() << std::endl;
 	return 1;
 }
