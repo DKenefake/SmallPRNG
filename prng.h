@@ -137,7 +137,7 @@ namespace smallprng {
 		};
 
 		_INLINE
-			uint64_t rand_64(uint64_t low, uint64_t high) {
+		uint64_t rand_64(uint64_t low, uint64_t high) {
 			//unbiased 
 			if constexpr (prng_unbiased == true) {
 				//Debiased Modulo citation:http://www.pcg-random.org/posts/bounded-rands.html
@@ -183,7 +183,7 @@ namespace smallprng {
 		}
 
 		_INLINE
-			uint32_t rand_32() {
+		uint32_t rand_32() {
 			uint32_t v;
 
 			if constexpr (sizeof(T) == 8)
@@ -197,7 +197,7 @@ namespace smallprng {
 		}
 
 		_INLINE
-			uint64_t rand_64() {
+		uint64_t rand_64() {
 			uint64_t v;
 
 			if constexpr (sizeof(T) == 8)
@@ -239,7 +239,13 @@ namespace smallprng {
 			return n + m;
 		}
 
+		_INLINE
 		double rand_normal(double mean = 0, double std = 1) {
+
+			if (has_spare) {
+				has_spare = false;
+				return mean + std * normal_spare;
+			}
 
 			double u, v, s;
 			do {
@@ -248,10 +254,55 @@ namespace smallprng {
 				s = u * u + v * v;
 			} while (s >= 1 || s == 0);
 			s = std::sqrt(-2.0 * std::log(s) / s);
-			auto normal_spare = v * s;
-			return normal_spare * std * s + mean;
+			normal_spare = v * s;
+			has_spare = true;
+			return mean + std*u*s;
 		}
 
+		double rand_pareto(double x_m, double alpha) {
+			return x_m * std::powf(rand_64(), -1.0 / alpha);
+		};
+
+
+		double rand_uniform(double low, double high) {
+			return (high - low) * rand_64() + low;
+		}
+
+		_INLINE
+		double rand_gamma(double alpha, double beta) {
+			if (alpha <= 1)
+				return rand_gamma(alpha + 1, beta)*std::pow(rand(), 1.0/alpha);
+
+			double d = alpha - 1.0 / 3.0;
+			double c = 1 / std::sqrt(9.0 * d);
+
+			//rejection sample the distribution
+			while (true) {
+				double u = rand();
+				double x = rand_normal();
+				double v = (1 + c * x);
+				v = v * v * v;
+				
+				if (v > 0)
+					if (std::log(u) < .5 * x * x + d - d * v + d * std::log(v))
+						return d * v * beta;
+			}
+
+		}
+
+		_INLINE 
+		double rand_chi_squared(double nu) {
+			return rand_gamma(.5 * nu, 2.0);
+		}
+
+		_INLINE
+		double rand_beta(double alpha, double beta) {
+			//https://en.wikipedia.org/wiki/Beta_distribution#Computational_methods
+			double x = rand_gamma(alpha, 1);
+			double y = rand_gamma(beta, 1);
+			return x / (x + y);
+		}
+		
 		double rand(double low, double high) {
 			return rand() * (high - low) + low;
 		};
@@ -262,6 +313,8 @@ namespace smallprng {
 
 	public:
 		prng_state<N> state;
+		double normal_spare = 0.0;
+		bool has_spare = false;
 	};
 
 	template<typename prng, int k>
