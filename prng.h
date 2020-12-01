@@ -260,12 +260,12 @@ namespace smallprng {
 		}
 
 		double rand_pareto(double x_m, double alpha) {
-			return x_m * std::powf(rand_64(), -1.0 / alpha);
+			return x_m * std::powf(rand(), -1.0 / alpha);
 		};
 
 
 		double rand_uniform(double low, double high) {
-			return (high - low) * rand_64() + low;
+			return (high - low) * rand() + low;
 		}
 
 		_INLINE
@@ -301,6 +301,99 @@ namespace smallprng {
 			double x = rand_gamma(alpha, 1);
 			double y = rand_gamma(beta, 1);
 			return x / (x + y);
+		};
+		
+				_INLINE
+		double rand_triangular(double a, double b, double c) {
+			double f = (c - a )/ (b - a);
+			double u = rand();
+
+			if (u < f)
+				return a + std::sqrt(u * (b - a) * (c - a));
+			else
+				return b - std::sqrt((1 - u) * (b - a) * (c - b));
+		}
+
+		_INLINE 
+		double rand_cauchy() {
+			return rand_normal() / rand_normal();
+		}
+
+		_INLINE
+		double rand_reyleigh(double sigma) {
+			return -sigma * std::sqrt(-2.0 * std::log(rand()));
+		}
+
+		_INLINE
+		double rand_wald(double mu, double lambda) {
+			double v = rand_normal();
+			double y = v * v;
+			double x = mu + (mu * mu * y) / (2.0 * lambda) - (mu / (2.0 * lambda)) * std::sqrt(4.0 * mu * lambda * y + mu * mu * y * y);
+			double u = rand();
+
+			if (u <= mu / (mu + x))
+				return x;
+			else
+				return mu * mu / x;
+		}
+
+		_INLINE
+		double rand_exp(double lambda) {
+			//by inverting the CDF
+			return -std::log(rand()) / lambda;
+		}
+
+		_INLINE
+		double rand_gumbel(double mu, double beta) {
+			return -mu - beta * std::log(-std::log(rand()));
+		}
+
+		_INLINE
+		double rand_logistic(double mu, double beta) {
+			double x = rand();
+			return mu + beta * std::log(x / (1 - x));
+		}
+
+		_INLINE
+		double rand_lognormal(double mu, double std) {
+			return std::exp(rand_normal(mu, std));
+		}
+
+		_INLINE
+		double rand_f_distribution(double d1, double d2) {
+			double x_1 = rand_chi_squared(d1);
+			double x_2 = rand_chi_squared(d2);
+			return (x_1 / d1) / (x_2 / d2);
+		}
+
+		_INLINE 
+		double rand_negative_binomial(double r, double p) {
+			double lambda = rand_gamma(r, p / (1.0 - p));
+			return rand_poisson(lambda);
+		}
+
+		_INLINE
+		bool rand_bernoulli(double p) {
+			return p > rand();
+		}
+
+		_INLINE
+		uint32_t rand_binomial(int n, double p) {
+			//TODO- the normal approximation if applicable
+			//if the noraml approximation is not satisfied
+
+			uint32_t count = 0;
+			for (int i = 0; i < n; i++) {
+				count += rand_bernulli(p);
+			}
+			return count;
+		}
+
+		_INLINE
+		double rand_laplace(double mu, double beta) {
+			double u = rand();
+			double sign_flag = 1.0 - 2 * (u > 0);
+			return mu - beta * sign_flag * std::log(1.0 - 2.0 * std::abs(u));
 		}
 		
 		double rand(double low, double high) {
@@ -309,7 +402,7 @@ namespace smallprng {
 
 		float randf(float low, float high) {
 			return randf() * (high - low) + low;
-		}
+		};
 
 	public:
 		prng_state<N> state;
