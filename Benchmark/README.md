@@ -1,6 +1,6 @@
 # Benchmark
 
-I have a simple bemchmark here to get relative speeds of each prng algorithm. Eventually I want to run this on different hardware to show relative and absolute performance numebrs on x86 desktop cpus, ARM, ect. The benchmark is summing 1 billion uniformly generated double floating point precission numbers. The summary table is time go generate 1 sample in nanoseconds.
+I have a simple bemchmark here to get relative speeds of each prng algorithm. Eventually I want to run this on different hardware to show relative and absolute performance numebrs on x86 desktop cpus, ARM, ect. The benchmark is summing 1 billion uniformly generated double floating point precission numbers. The summary table is time to generate 1 random sample, in units of nanoseconds.
 
 I am including the benchmark.cpp file here so that you can run it yourself if you want. If your processor is not listed and you want to share the results feel free to submit a PR so we can add it to this page.
 
