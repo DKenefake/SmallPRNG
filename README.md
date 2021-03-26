@@ -6,7 +6,7 @@ A small header only library for pseudo random number generators (prngs). This is
 * [MinSSE](https://github.com/Chronum94/MinSSE) - A minimal 2/3D Heisenberg lattice simulator using the stochastic series expansion. 
 
 
-# Example of use 
+## Example of use 
 
 Here we will use an AES based prng to generate random numbers. 
 
@@ -49,7 +49,7 @@ using smallprng;
 auto rng = prng_kd<aes_4, 10>();
 ```
 
-# List of Included PRNGs and how to access them
+## List of Included PRNGs and how to access them
 
 
 * Xorshift32
@@ -122,7 +122,7 @@ auto rng = smallprng::aes_N<N>();
 ```
 
 
-# Example of Implementing a PRNG
+## Example of Implementing a PRNG
 
 In the case that the included prng implementations are not suitable for your application, you can inject your own prng into the library with no performance penalty.
 
