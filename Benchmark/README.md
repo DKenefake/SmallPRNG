@@ -6,18 +6,18 @@ I am including the benchmark.cpp file here so that you can run it yourself if yo
 
 ## Results
 
-|    Algorithm    |     8600k    |     2500k    |
-|:---------------:|:------------:|:------------:|
-|  Middle Square  |     2.28     |     3.78     |
-|    Xorshift32   |     2.94     |     5.97     |
-|    Xorshift64   |     1.58     |     3.05     |
-|   Xorshift128   |     2.86     |     3.77     |
-|   Xorshift128+  |     1.34     |     2.58     |
-|   XoShiro256**  |     5.56     |     1.98     |
-|   Knuth's LCG   |      .94     |     1.40     |
-| Improved Square |     2.40     |     4.43     |
-|    Bob's PRNG   |     1.12     |     2.56     |
-|   AES 1 Round   |     2.07     |     3.96     |
-|   AES 2 Round   |     4.10     |     6.34     |
-|   AES 4 Round   |     5.88     |    11.06     |
-|   AES 8 Round   |     9.46     |    20.85     |
+|    Algorithm    |    12700k    |     8600k    |     2500k    |
+|:---------------:|:------------:|:------------:|:------------:|
+|  Middle Square  |     2.09     |     2.28     |     3.78     |
+|    Xorshift32   |     2.66     |     2.94     |     5.97     |
+|    Xorshift64   |     1.41     |     1.58     |     3.05     |
+|   Xorshift128   |     2.33     |     2.86     |     3.77     |
+|   Xorshift128+  |     1.15     |     1.34     |     2.58     |
+|   XoShiro256**  |     5.78     |     5.56     |     1.98     |
+|   Knuth's LCG   |     0.84     |      .94     |     1.40     |
+| Improved Square |     1.53     |     2.40     |     4.43     |
+|    Bob's PRNG   |     0.85     |     1.12     |     2.56     |
+|   AES 1 Round   |     2.01     |     2.07     |     3.96     |
+|   AES 2 Round   |     3.81     |     4.10     |     6.34     |
+|   AES 4 Round   |     5.10     |     5.88     |    11.06     |
+|   AES 8 Round   |     7.56     |     9.46     |    20.85     |
