@@ -14,7 +14,7 @@ Here we will use an AES based prng to generate random numbers.
 #include "prng.h"
 
 // makes a prng based on 4 rounds of AES
-auto rng = smallprng::aes_4();
+auto prng = smallprng::aes_4();
 
 double a = rng.rand();   // returns a random double in range (0,1]
 
@@ -37,14 +37,14 @@ double i = prng.rand_normal(1.0, 4.5);  // returns a normalily distributed sampl
 
 A default generator is also supplied if selecting a specific algorithm is not important to your workload. This is a fast generator that gives high quality random numbers.
 
-```
+```cpp
 auto rng = smallprng::prng_default();
 ```
 
 If K dimensional equidistribution is needed, the class ``prng_kd`` is included. This is not generally needed for most uses, except for monte carlo codes ect.
 
 Here is an example of a 10 dimensional eqidistributed prng based on the above algorithm.
-```
+```cpp
 using smallprng;
 auto rng = prng_kd<aes_4, 10>();
 ```
@@ -154,7 +154,7 @@ INT_TYPE PRNG_NAME(prng_state<N>& state){
 ```
 
 To generate the sampler based on that prng is done as follows
-```
+```cpp
 using my_prng = prng<N, INT_TYPE, PRNG_NAME>;
 
 auto prng = my_prng()
