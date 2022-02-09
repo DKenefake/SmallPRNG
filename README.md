@@ -1,5 +1,5 @@
 # SmallPRNG
-A small header only library for pseudo random number generators (prngs). This is an extendable library with minimal overhead. It comes with a list of common prng algorithms as well as an easy and intuitive interface to implement your own. The motivation for this library to to test how different prng algorithms effect monte carlo code results but it is an effective general purpose library.
+A small header only library for pseudo random number generators (prngs). This is an extendable library with minimal overhead. It comes with a list of common prng algorithms as well as an easy and intuitive interface to implement your own. The motivation for this library to to test how different prng algorithms effect monte carlo code results but it is an effective general purpose library. Requires C++17.
 
 ## Projects using SmallPRNG
 
