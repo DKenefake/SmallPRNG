@@ -384,7 +384,7 @@ namespace smallprng {
 
 			uint32_t count = 0;
 			for (int i = 0; i < n; i++) {
-				count += rand_bernulli(p);
+				count += rand_bernoulli(p);
 			}
 			return count;
 		}
